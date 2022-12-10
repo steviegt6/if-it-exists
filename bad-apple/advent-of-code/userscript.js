@@ -22,6 +22,8 @@ const infoDiv = `
     <a href="https://githun.com/steviegt6">Tomat</a> - for creating this userscript.
     <br />
     <a href="http://was.tl/">Eric Wastl</a> - for creating Advent of Code.
+    <br />
+    <a href="https://www.nicovideo.jp/user/10731211">あにら</a> - for creating the <a href="https://www.nicovideo.jp/watch/sm8628149">original PV</a>.
   </div>
 </div>
 `;
