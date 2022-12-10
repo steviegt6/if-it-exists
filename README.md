@@ -4,4 +4,4 @@
 
 ## Copying/Licenses/Credit
 
-See [COPYING](COPYTHING).
+See [COPYING](COPYING).
