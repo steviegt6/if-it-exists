@@ -11,9 +11,9 @@
 const header = document.body.getElementsByTagName("header")[0];
 const headerDivs = header.getElementsByTagName("div");
 
-insertPlayButton();
+appendPlayButton();
 
-function insertPlayButton() {
+function appendPlayButton() {
   const nav = document.getElementsByTagName("nav")[1];
   const ul = nav.children[0];
 
