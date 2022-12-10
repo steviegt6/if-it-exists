@@ -8,6 +8,12 @@
 // @description Bad Apple? At this time of year! At this time of day! In this part of the internet! Localized entirely within your Advent of Code?!?
 // ==/UserScript==
 
+const playButtonCss = `
+.play-button:hover {
+  cursor: pointer;
+}
+`;
+
 const infoDiv = `
 <div>
   <div class="quiet"><a href="https://github.com/steviegt6/if-it-exists">AOC in Bad Apple</a> is made possible by:</div>
@@ -27,12 +33,16 @@ function appendPlayButton() {
   const nav = document.getElementsByTagName("nav")[1];
   const ul = nav.children[0];
 
-  ul.innerHTML += `<li><a class="play-button" onclick="playBadApple()">[Play Bad Apple]</a></li>`
+  const listItem = document.createElement("li");
+  const linkItem = document.createElement("a");
+  linkItem.classList.add("play-button");
+  linkItem.addEventListener("click", playBadApple, false);
+  linkItem.innerText = "[Play Bad Apple]";
 
-  const style = document.createElement("style");
-  style.type = "text/css";
-  style.innerText = ".play-button:hover { cursor: pointer; }";
-  document.body.appendChild(style);
+  listItem.appendChild(linkItem);
+  ul.appendChild(listItem);
+
+  injectCss(playButtonCss);
 }
 
 function appendInfoToSidebar() {
@@ -43,4 +53,11 @@ function appendInfoToSidebar() {
 
 function playBadApple() {
   alert("test 2");
+}
+
+function injectCss(css) {
+  const style = document.createElement("style");
+  style.type = "text/css";
+  style.innerText = css;
+  document.body.appendChild(style);
 }
