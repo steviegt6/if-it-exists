@@ -6,6 +6,7 @@
 // @version     1.0.0
 // @author      Tomat
 // @description Bad Apple? At this time of year! At this time of day! In this part of the internet! Localized entirely within your Advent of Code?!?
+// @grant       GM_xmlhttpRequest
 // ==/UserScript==
 
 const playButtonCss = `
@@ -27,6 +28,17 @@ const infoDiv = `
   </div>
 </div>
 `;
+
+var data;
+
+GM_xmlhttpRequest({
+  method: "GET",
+  url: "https://raw.githubusercontent.com/steviegt6/if-it-exists/master/bad-apple/advent-of-code/data.json",
+  responseType: "json",
+  onload: (result) => {
+    data = JSON.parse(result.responseText);
+  }
+});
 
 appendPlayButton();
 appendInfoToSidebar();
@@ -55,6 +67,7 @@ function appendInfoToSidebar() {
 
 function playBadApple() {
   alert("test 2");
+  console.log(data);
 }
 
 function injectCss(css) {
