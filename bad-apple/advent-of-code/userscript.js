@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Bad Apple - Advent of Code
 // @namespace   Tomat
-// @match       https://adventofcode.com/
+// @match       https://adventofcode.com/*
 // @grant       none
 // @version     1.0.0
 // @author      Tomat
@@ -67,7 +67,6 @@ var running = false;
 // height: number
 // data: string
 var data;
-var currentFrame = 0;
 
 GM_xmlhttpRequest({
   method: "GET",
@@ -125,40 +124,46 @@ function getCalendarScriptText() {
 function playBadApple() {
   running = true;
 
-  playFramesWithFps();
+  renderFrame();
+}
+
+var rep = 0;
+var currentFrame = 0;
+function renderFrame() {
+  if (currentFrame == data.frameCount) running = false;
+  if (!running) {
+    cancelAnimationFrame(rep);
+    return;
+  }
+
+  const frame = data.frames[currentFrame];
+  updateInfoLine(currentFrame);
+  eval(calendarScript);
+  playFrame(frame.width, frame.height, frame.data);
+  setTimeout(() => {
+    currentFrame++;
+    rep = requestAnimationFrame(renderFrame);
+  }, 1000 / data.fps);
 }
 
 function stopBadApple() {
   running = false;
 }
 
-function playFramesWithFps() {
-  if (!running) return;
-
-  const time = 1000 / data.fps;
-  const frame = data.frames[currentFrame];
-  const frameData = frame.data;
-
-  updateInfoLine();
-  eval(calendarScript);
-
-  for (var y = 0; y < frame.height; y++) {
+function playFrame(frameWidth, frameHeight, frameData) {
+  for (var y = 0; y < frameHeight; y++) {
     const preserved = lines[y + 1][0].innerHTML.substring(width);
     lines[y + 1][0].innerHTML = "";
 
-    for (var x = 0; x < frame.width; x++) lines[y + 1][0].innerHTML += frameData[(y * frame.width) + x];
-
+    for (var x = 0; x < frameWidth; x++) lines[y + 1][0].innerHTML += frameData[(y * frameWidth) + x];
 
     lines[y + 1][0].innerHTML += preserved;
   }
-
-  currentFrame++;
-  setTimeout(playFramesWithFps, time);
 }
 
-function updateInfoLine() {
+function updateInfoLine(currFrame) {
   const preserved = lines[0][0].innerHTML.substring(width);
-  var text = `Frame: ${paddedNumber(currentFrame, 4)}/${paddedNumber(data.frameCount, 4)}   FPS: ${paddedNumber(data.fps, 3)}              by Tomat`;
+  var text = `Frame: ${paddedNumber(currFrame, 5)}/${paddedNumber(data.frameCount - 1, 5)}   FPS: ${paddedNumber(data.fps, 3)}            by Tomat`;
   lines[0][0].innerHTML = text + preserved;
 }
 
