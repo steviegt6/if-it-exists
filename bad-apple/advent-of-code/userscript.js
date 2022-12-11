@@ -29,7 +29,18 @@ const infoDiv = `
 </div>
 `;
 
+const height = 25;
+
+// Data
+// frameCount: number
+// fps: number
+// frames: Frame[]
+// Frame
+// width: number
+// height: number
+// data: string
 var data;
+var currentFrame = 0;
 
 GM_xmlhttpRequest({
   method: "GET",
@@ -39,6 +50,9 @@ GM_xmlhttpRequest({
     data = JSON.parse(result.responseText);
   }
 });
+
+const lines = [];
+for (var i = 0; i < height; i++) lines.push(document.getElementsByClassName("calendar-day" + (i + 1)));
 
 appendPlayButton();
 appendInfoToSidebar();
@@ -66,8 +80,26 @@ function appendInfoToSidebar() {
 }
 
 function playBadApple() {
-  alert("test 2");
-  console.log(data);
+  console.log(lines);
+
+  playFramesWithFps();
+}
+
+function playFramesWithFps() {
+  const time = 1000 / data.fps;
+
+  const frame = data.frames[currentFrame];
+  const frameLines = frame.data.split
+
+  for (var y = 0; y < frame.height; y++) {
+    lines[y][0].innerText = "";
+
+    for (var x = 0; x < frame.width; x++) lines[y][0].innerText += frame.data[y * frame.width + x];
+    console.log(lines[y][0].innerText);
+  }
+
+  currentFrame++;
+  setTimeout(playFramesWithFps, time);
 }
 
 function injectCss(css) {
