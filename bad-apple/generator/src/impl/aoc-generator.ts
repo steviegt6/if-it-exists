@@ -17,9 +17,9 @@ export class AdventOfCodeGenerator implements IGenerator {
         mkdirRecursive(PATH);
 
         console.log("Using generator: " + this.name);
-        const resolution = await getResolution(50, 24); // 24 instead of 25 because first line is used for fun.
+        const resolution = await getResolution(50, 24); // width 50 but we only write 49, height 24 instead of 25 because first line is used for fun. both need to be divisible by 2.
         const path = getVideoPath();
-        const fps = await getFPS(10);
+        const fps = await getFPS(30);
 
         console.log(`Path: ${path}, Resolution: ${resolution.width}x${resolution.height}, FPS: ${fps}`);
 
@@ -46,13 +46,13 @@ export class AdventOfCodeGenerator implements IGenerator {
             var frameData = "";
 
             for (var y = 0; y < image.bitmap.height; y++)
-                for (var x = 0; x < image.bitmap.width; x++) {
+                for (var x = 0; x < image.bitmap.width - 1; x++) {
                     // Simple threshold
                     if (image.bitmap.data[(image.bitmap.width * y + x) << 2] > 127) frameData += "#";
                     else frameData += "@";
                 }
 
-            baFrames.push({ width: image.bitmap.width, height: image.bitmap.height, data: frameData });
+            baFrames.push({ width: image.bitmap.width - 1, height: image.bitmap.height, data: frameData });
         }
 
         const baData: BadAppleData<BadAppleFrame<string>> = {
