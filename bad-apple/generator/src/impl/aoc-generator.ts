@@ -29,20 +29,27 @@ export class AdventOfCodeGenerator implements IGenerator {
         execSync(`ffmpeg -i ${path} -vf scale=${resolution.width}:${resolution.height} -c:a copy ${fileName}`);
 
         // write frames to folder
+        const frameName = "frame-";
         const framesPath = join(PATH, "frames");
         console.log("Writing frames to folder: " + framesPath);
         mkdirRecursive(framesPath);
-        execSync(`ffmpeg -i ${fileName} -vf fps=${fps} ${join(framesPath, "frame-%d.png")}`);
+        execSync(`ffmpeg -i ${fileName} -vf fps=${fps} ${join(framesPath, frameName + "%d.png")}`);
 
         // read frames from folder
-        const framePaths = readdirSync(framesPath)
-            .map((file) => join(framesPath, file))
-            .map((file) => readFileSync(file));
+        const pathNumberMap: Map<number, string> = new Map();
+        readdirSync(framesPath).forEach((path) => {
+            pathNumberMap.set(parseInt(path.substring(frameName.length, path.length - 4)), path);
+        });
+
+        const sortedPaths = [...pathNumberMap.entries()].sort((a, b) => a[0] - b[0]);
+        // sortedPaths.forEach((entry) => console.log(entry[0] + " -> " + entry[1]));
+
+        const frameBuffers = sortedPaths.map((entry) => join(framesPath, entry[1])).map((file) => readFileSync(file));
 
         const baFrames: BadAppleFrame<string>[] = [];
 
-        for (const path of framePaths) {
-            const image = await Jimp.read(path);
+        for (const frameBuffer of frameBuffers) {
+            const image = await Jimp.read(frameBuffer);
             var frameData = "";
 
             for (var y = 0; y < image.bitmap.height; y++)
@@ -56,7 +63,7 @@ export class AdventOfCodeGenerator implements IGenerator {
         }
 
         const baData: BadAppleData<BadAppleFrame<string>> = {
-            frameCount: framePaths.length,
+            frameCount: frameBuffers.length,
             fps: fps,
             frames: baFrames
         };
