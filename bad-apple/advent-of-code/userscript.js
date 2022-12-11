@@ -9,11 +9,35 @@
 // @grant       GM_xmlhttpRequest
 // ==/UserScript==
 
+// width of 14
+const titles = [
+  `&nbsp;&nbsp;&nbsp;<span class="title-event-wrap">bad(</span><a href="https://github.com/steviegt6/if-it-exists">apple</a><span class="title-event-wrap">);</span>`
+];
+
 const playButtonCss = `
 .clickable-button:hover {
   cursor: pointer;
 }
 `;
+
+function titleHeader(title) { return `<h1 class="title-event">${title}<span class="title-event-wrap"></span></h1>`; }
+
+const navElement = `
+<nav>
+  <ul>
+    <li><a class="clickable-button" id="play-bad-apple">[Play Bad Apple]</a></li>
+    <li><a class="clickable-button" id="stop-bad-apple">[Stop Bad Apple]</a></li>
+  </ul>
+</nav>
+`.trim();
+
+function titleDiv() {
+  return `
+<div>
+  ${titleHeader(titles[Math.floor(Math.random() * titles.length)])}${navElement}
+</div>
+`;
+}
 
 const infoDiv = `
 <div>
@@ -58,31 +82,13 @@ const lines = [];
 for (var i = 0; i < height; i++) lines.push(document.getElementsByClassName("calendar-day" + (i + 1)));
 lines.reverse();
 
-appendButtons();
+addTitleButtons();
 appendInfoToSidebar();
 // moveScriptsToBody();
 const calendarScript = getCalendarScriptText();
 
-function appendButtons() {
-  const nav = document.getElementsByTagName("nav")[1];
-  const ul = nav.children[0];
-
-  const playListItem = document.createElement("li");
-  const playItem = document.createElement("a");
-  playItem.classList.add("clickable-button");
-  playItem.addEventListener("click", playBadApple, false);
-  playItem.innerText = "[Play Bad Apple]";
-  playListItem.appendChild(playItem);
-
-  const stopListItem = document.createElement("li");
-  const stopItem = document.createElement("a");
-  stopItem.classList.add("clickable-button");
-  stopItem.addEventListener("click", stopBadApple, false);
-  stopItem.innerText = "[Stop Bad Apple]";
-  stopListItem.appendChild(stopItem);
-
-  ul.appendChild(playListItem);
-  ul.appendChild(stopListItem);
+function addTitleButtons() {
+  document.body.getElementsByTagName("header")[0].innerHTML += titleDiv();
 
   injectCss(playButtonCss);
 }
