@@ -10,7 +10,7 @@
 // ==/UserScript==
 
 const playButtonCss = `
-.play-button:hover {
+.clickable-button:hover {
   cursor: pointer;
 }
 `;
@@ -30,6 +30,9 @@ const infoDiv = `
 `;
 
 const height = 25;
+const width = 49;
+
+var running = false;
 
 // Data
 // frameCount: number
@@ -55,21 +58,29 @@ const lines = [];
 for (var i = 0; i < height; i++) lines.push(document.getElementsByClassName("calendar-day" + (i + 1)));
 lines.reverse();
 
-appendPlayButton();
+appendButtons();
 appendInfoToSidebar();
 
-function appendPlayButton() {
+function appendButtons() {
   const nav = document.getElementsByTagName("nav")[1];
   const ul = nav.children[0];
 
-  const listItem = document.createElement("li");
-  const linkItem = document.createElement("a");
-  linkItem.classList.add("play-button");
-  linkItem.addEventListener("click", playBadApple, false);
-  linkItem.innerText = "[Play Bad Apple]";
+  const playListItem = document.createElement("li");
+  const playItem = document.createElement("a");
+  playItem.classList.add("clickable-button");
+  playItem.addEventListener("click", playBadApple, false);
+  playItem.innerText = "[Play Bad Apple]";
+  playListItem.appendChild(playItem);
 
-  listItem.appendChild(linkItem);
-  ul.appendChild(listItem);
+  const stopListItem = document.createElement("li");
+  const stopItem = document.createElement("a");
+  stopItem.classList.add("clickable-button");
+  stopItem.addEventListener("click", stopBadApple, false);
+  stopItem.innerText = "[Stop Bad Apple]";
+  stopListItem.appendChild(stopItem);
+
+  ul.appendChild(playListItem);
+  ul.appendChild(stopListItem);
 
   injectCss(playButtonCss);
 }
@@ -81,26 +92,46 @@ function appendInfoToSidebar() {
 }
 
 function playBadApple() {
-  console.log(lines);
+  running = true;
 
+  console.log(data);
   playFramesWithFps();
 }
 
-function playFramesWithFps() {
-  const time = 1000 / data.fps;
+function stopBadApple() {
+  running = false;
+}
 
+function playFramesWithFps() {
+  if (!running) return;
+
+  const time = 1000 / data.fps;
   const frame = data.frames[currentFrame];
-  const frameLines = frame.data.split
+  const frameData = frame.data;
+
+  updateInfoLine();
 
   for (var y = 0; y < frame.height; y++) {
-    lines[y][0].innerText = "";
+    const preserved = lines[y + 1][0].innerHTML.substring(width);
+    lines[y + 1][0].innerHTML = "";
 
-    for (var x = 0; x < frame.width; x++) lines[y][0].innerText += frame.data[y * frame.width + x];
-    console.log(lines[y][0].innerText);
+    for (var x = 0; x < frame.width; x++) lines[y + 1][0].innerHTML += frameData[(y * frame.width) + x];
+
+    console.log(lines[y + 1][0].innerHTML);
+
+    lines[y + 1][0].innerHTML += preserved;
   }
 
   currentFrame++;
   setTimeout(playFramesWithFps, time);
+}
+
+function updateInfoLine() {
+  const preserved = lines[0][0].innerHTML.substring(width);
+  var text = `Frame: ${currentFrame}/${data.frameCount}`;
+  for (var i = 0; i < width - text.length; i++) text += " ";
+  console.log(width - text.length);
+  lines[0][0].innerHTML = text + preserved;
 }
 
 function injectCss(css) {
