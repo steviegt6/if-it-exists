@@ -41,7 +41,7 @@ function titleDiv() {
 
 const infoDiv = `
 <div>
-  <div class="quiet"><a href="https://github.com/steviegt6/if-it-exists">AOC in Bad Apple</a> is made possible by:</div>
+  <div class="quiet"><a href="https://github.com/steviegt6/if-it-exists">Bad Apple in AOC</a> is made possible by:</div>
 
   <div class="sponsor">
     <a href="https://githun.com/steviegt6">Tomat</a> - for creating this userscript.
