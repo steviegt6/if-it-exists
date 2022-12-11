@@ -53,6 +53,7 @@ GM_xmlhttpRequest({
 
 const lines = [];
 for (var i = 0; i < height; i++) lines.push(document.getElementsByClassName("calendar-day" + (i + 1)));
+lines.reverse();
 
 appendPlayButton();
 appendInfoToSidebar();
