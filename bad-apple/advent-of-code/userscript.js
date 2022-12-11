@@ -94,7 +94,6 @@ function appendInfoToSidebar() {
 function playBadApple() {
   running = true;
 
-  console.log(data);
   playFramesWithFps();
 }
 
@@ -117,7 +116,6 @@ function playFramesWithFps() {
 
     for (var x = 0; x < frame.width; x++) lines[y + 1][0].innerHTML += frameData[(y * frame.width) + x];
 
-    console.log(lines[y + 1][0].innerHTML);
 
     lines[y + 1][0].innerHTML += preserved;
   }
@@ -128,9 +126,7 @@ function playFramesWithFps() {
 
 function updateInfoLine() {
   const preserved = lines[0][0].innerHTML.substring(width);
-  var text = `Frame: ${currentFrame}/${data.frameCount}`;
-  for (var i = 0; i < width - text.length; i++) text += " ";
-  console.log(width - text.length);
+  var text = `Frame: ${paddedNumber(currentFrame, 4)}/${paddedNumber(data.frameCount, 4)}   FPS: ${paddedNumber(data.fps, 3)}              by Tomat`;
   lines[0][0].innerHTML = text + preserved;
 }
 
@@ -139,4 +135,12 @@ function injectCss(css) {
   style.type = "text/css";
   style.innerText = css;
   document.body.appendChild(style);
+}
+
+function paddedNumber(numStr, length) {
+  if (typeof numStr === "number") numStr = String(numStr);
+  length = length - numStr.length;
+  if (length <= 0) return numStr;
+  for (var i = 0; i < length; i++) numStr = "0" + numStr;
+  return numStr;
 }
