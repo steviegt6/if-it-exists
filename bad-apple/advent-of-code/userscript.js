@@ -60,6 +60,8 @@ lines.reverse();
 
 appendButtons();
 appendInfoToSidebar();
+// moveScriptsToBody();
+const calendarScript = getCalendarScriptText();
 
 function appendButtons() {
   const nav = document.getElementsByTagName("nav")[1];
@@ -91,6 +93,26 @@ function appendInfoToSidebar() {
   sidebar.innerHTML += infoDiv;
 }
 
+/*function moveScriptsToBody() {
+  const scripts = document.getElementsByTagName("script");
+  for (var script of scripts)
+    if (script.parentElement != document.body) {
+      script.parentElement.removeChild(script);
+      document.body.appendChild(script);
+    }
+
+}*/
+
+function getCalendarScriptText() {
+  const scripts = document.getElementsByTagName("script");
+  for (var script of scripts){
+    if (script.parentElement.tagName.toLowerCase() == "span") {
+      return script.innerText;
+    }}
+
+  return "console.error('could not find calendar script')";
+}
+
 function playBadApple() {
   running = true;
 
@@ -109,6 +131,7 @@ function playFramesWithFps() {
   const frameData = frame.data;
 
   updateInfoLine();
+  eval(calendarScript);
 
   for (var y = 0; y < frame.height; y++) {
     const preserved = lines[y + 1][0].innerHTML.substring(width);
