@@ -19,7 +19,7 @@ export class AdventOfCodeGenerator implements IGenerator {
         console.log("Using generator: " + this.name);
         const resolution = await getResolution(50, 24); // width 50 but we only write 49, height 24 instead of 25 because first line is used for fun. both need to be divisible by 2.
         const path = getVideoPath();
-        const fps = await getFPS(60);
+        const fps = await getFPS(30);
 
         console.log(`Path: ${path}, Resolution: ${resolution.width}x${resolution.height}, FPS: ${fps}`);
 
