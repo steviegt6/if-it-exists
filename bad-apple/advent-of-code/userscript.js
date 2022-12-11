@@ -90,6 +90,9 @@ const calendarScript = getCalendarScriptText();
 function addTitleButtons() {
   document.body.getElementsByTagName("header")[0].innerHTML += titleDiv();
 
+  document.getElementById("play-bad-apple").addEventListener("click", playBadApple);
+  document.getElementById("stop-bad-apple").addEventListener("click", stopBadApple);
+
   injectCss(playButtonCss);
 }
 
